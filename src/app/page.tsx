@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
-      <div className="relative w-full h-screen mb-8">
+      <div className="relative w-full aspect-video mb-8">
         <video
           className="w-full h-full object-cover rounded-lg shadow-lg"
           autoPlay
