@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { provinces, districtsByProvince } from '../data/locations';
 
 const Navbar = () => {
   const [selectedProvince, setSelectedProvince] = useState('Bagmati');
@@ -8,19 +9,13 @@ const Navbar = () => {
   const [municipality, setMunicipality] = useState('');
   const [ward, setWard] = useState('');
 
-  // Province options
-  const provinces = [
-    'Koshi',
-    'Madhesh',
-    'Bagmati',
-    'Gandaki',
-    'Lumbini',
-    'Karnali',
-    'Sudur-Paschim'
-  ];
-
   // Generate ward numbers from 1 to 35
   const wardNumbers = Array.from({ length: 35 }, (_, i) => (i + 1).toString());
+
+  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProvince(e.target.value);
+    setDistrict(''); // Reset district when province changes
+  };
 
   return (
     <div className="bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg">
@@ -34,7 +29,7 @@ const Navbar = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg p-4 shadow-md">
+        <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-green-700 font-semibold text-lg mb-4 border-b border-green-100 pb-2">Location Information</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -47,7 +42,7 @@ const Navbar = () => {
                 <select
                   id="province"
                   value={selectedProvince}
-                  onChange={(e) => setSelectedProvince(e.target.value)}
+                  onChange={handleProvinceChange}
                   className="w-full rounded-md border border-gray-300 p-2.5 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none bg-white"
                 >
                   {provinces.map((province) => (
@@ -64,19 +59,31 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* District Input */}
+            {/* District Dropdown */}
             <div className="w-full">
               <label htmlFor="district" className="block text-gray-700 font-medium text-sm mb-1">
                 District <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="district"
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                placeholder="Enter district"
-                className="w-full rounded-md border border-gray-300 p-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              />
+              <div className="relative">
+                <select
+                  id="district"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  className="w-full rounded-md border border-gray-300 p-2.5 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none bg-white"
+                >
+                  <option value="">Select District</option>
+                  {districtsByProvince[selectedProvince as keyof typeof districtsByProvince]?.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Municipality Input */}
